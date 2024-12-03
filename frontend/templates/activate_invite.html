@@ -1,0 +1,50 @@
+
+<form id="activate-invite-form">
+    <label for="invite_code">Введите инвайт код:</label>
+    <input type="text" id="invite_code" name="invite_code" required>
+    <button type="submit">Активировать</button>
+</form>
+
+<p id="response"></p>
+
+<script>
+    document.getElementById('activate-invite-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const inviteCode = document.getElementById('invite_code').value;
+
+        if (!token) {
+            document.getElementById('response').textContent = "Ошибка: Необходима авторизация!";
+            return;
+        }
+
+        fetch('/api/activate-invite/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            },
+            body: JSON.stringify({
+                invite_code: inviteCode
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                // Если статус не в пределах 2xx, получаем тело ошибки
+                return response.json().then(data => {
+                    // Выводим весь ответ от сервера
+                    document.getElementById('response').textContent = `Ошибка: ${JSON.stringify(data)}`;
+                });
+            } else {
+                // Если запрос успешен, выводим успешное сообщение
+                return response.json().then(data => {
+                    document.getElementById('response').textContent = "Инвайт код успешно активирован!";
+                });
+            }
+        })
+        .catch(error => {
+            // В случае ошибки на уровне fetch (например, проблема с сетью)
+            document.getElementById('response').textContent = `Произошла ошибка: ${error.message}`;
+        });
+    });
+</script>

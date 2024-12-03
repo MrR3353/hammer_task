@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %} Проверка кода авторизации {% endblock %}
+
+{% block content %}
+    <h1>Проверка кода авторизации</h1>
+
+    <form id="verify-code-form">
+        <label for="phone_number">Номер телефона:</label>
+        <input type="text" id="phone_number" name="phone_number" required>
+
+        <label for="code">Код:</label>
+        <input type="text" id="code" name="code" required>
+
+        <button type="submit">Проверить код</button>
+    </form>
+
+    <p id="response"></p>
+
+    <script>
+        document.getElementById('verify-code-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const phone_number = document.getElementById('phone_number').value;
+            const code = document.getElementById('code').value;
+
+            fetch('/api/verify-code/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ phone_number: phone_number, code: code }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.token) {
+                    document.getElementById('response').textContent = `Ваш токен: ${data.token}`;
+                    function setCookie(name, value, days) {
+                        const expires = new Date();
+                        expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));  // время истечения
+                        const expiresString = "expires=" + expires.toUTCString();
+                        document.cookie = `${name}=${value}; ${expiresString}; path=/`; // path=/ - доступность cookie для всего сайта
+                    }
+
+                    // Сохраняем токен в cookie
+                    setCookie('auth_token', data.token, 1); // Токен будет жить 1 день
+<!--                    document.cookie = `token=${data.token}; path=/; Secure; HttpOnly; SameSite=Strict;`;-->
+                } else {
+                    if (data.error) {
+                        document.getElementById('response').textContent = `Ошибка: ${data.error}`;
+                    } else {
+                        let errorMessage = 'Ошибка: ';
+                        // Проверим, есть ли ошибки (например, на поле 'phone_number')
+                        for (const [field, messages] of Object.entries(data)) {
+                            if (Array.isArray(messages)) {
+                                errorMessage += `${field}: ${messages.join(', ')}\n`;
+                            }
+                        }
+                        // Выводим все ошибки
+                        document.getElementById('response').textContent = errorMessage;
+                    }
+                }
+            })
+            .catch(error => {
+                document.getElementById('response').textContent = `Ошибка: ${error}`;
+            });
+        });
+    </script>
+{% endblock %}

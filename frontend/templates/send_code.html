@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %} Отправка кода авторизации {% endblock %}
+
+{% block content %}
+    <h1>Отправить код авторизации</h1>
+
+    <form id="send-code-form">
+        <label for="phone_number">Номер телефона:</label>
+        <input type="text" id="phone_number" name="phone_number" required>
+        <button type="submit">Отправить код</button>
+    </form>
+
+    <p id="response"></p>
+
+    <script>
+        document.getElementById('send-code-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const phone_number = document.getElementById('phone_number').value;
+
+            fetch('/api/send-code/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ phone_number: phone_number }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.code) {
+                    document.getElementById('response').textContent = `Код отправлен: ${data.code}`;
+                } else {
+    <!--                    document.getElementById('response').textContent = `Ошибка: ${data.error}`;-->
+                    let errorMessage = 'Ошибка: ';
+
+                    // Проверим, есть ли ошибки (например, на поле 'phone_number')
+                    for (const [field, messages] of Object.entries(data)) {
+                        if (Array.isArray(messages)) {
+                            errorMessage += `${field}: ${messages.join(', ')}\n`;
+                        }
+                    }
+                    // Выводим все ошибки
+                    document.getElementById('response').textContent = errorMessage;
+                }
+            })
+            .catch(error => {
+                document.getElementById('response').textContent = `Ошибка: ${error}`;
+            });
+        });
+    </script>
+{% endblock %}

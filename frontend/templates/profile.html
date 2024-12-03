@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %} Профиль пользователя {% endblock %}
+
+{% block content %}
+    <h1>Профиль пользователя</h1>
+
+    <p id="phone-number"></p>
+    <p id="invite-code"></p>
+    <p id="activated-invite-code"></p>
+    <ul id="referrals-list"></ul>
+    <ul id="error"></ul>
+
+    <script>
+        function getCookie(name) {
+            const nameEQ = name + "=";
+            const ca = document.cookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i].trim();
+                if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+            }
+            return null; // Возвращаем null, если cookie с таким именем не найдено
+        }
+
+        // Пример использования:
+        const token = getCookie('auth_token');
+
+        if (token) {
+            fetch('/api/profile/', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,  // Отправляем токен для аутентификации
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.phone_number) {
+                    document.getElementById('phone-number').textContent = `Номер телефона: ${data.phone_number}`;
+                    document.getElementById('invite-code').textContent = `Код приглашения: ${data.invite_code}`;
+                    document.getElementById('activated-invite-code').textContent = `Активированный код приглашения: ${data.activated_invite_code}`;
+
+                    const referralsList = document.getElementById('referrals-list');
+                    data.referrals_phones.forEach(phone => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = phone;
+                        referralsList.appendChild(listItem);
+                    });
+                } else {
+                    document.getElementById('error').textContent = `Ошибка: ${JSON.stringify(data, null, 2)}`;
+                }
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+            });
+        } else {
+            document.getElementById('error').innerHTML = `<a href="{% url 'send_code_template' %}">Авторизуйтесь заново</a>`;
+        }
+    </script>
+
+    {% include 'activate_invite.html' %}
+{% endblock %}

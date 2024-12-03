@@ -67,7 +67,6 @@ class VerifyAuthCodeView(APIView):
 
             AuthCode.objects.get(phone_number=phone_number).delete()
             user, created = User.objects.get_or_create(phone_number=phone_number)
-            print(user, type(user))
             token, _ = Token.objects.get_or_create(user=user)
             return Response({
                 "phone_number": user.phone_number,
