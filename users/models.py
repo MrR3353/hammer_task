@@ -1,12 +1,14 @@
 import datetime
 
 import shortuuid
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import User as DjangoUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.timezone import now
 
 
-class User(models.Model):
+class User(DjangoUser):
     phone_number = models.CharField(max_length=15, unique=True)
     invite_code = models.CharField(max_length=6, unique=True)
     activated_invite_code = models.CharField(max_length=6, blank=True, null=True, db_index=True)

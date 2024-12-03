@@ -4,6 +4,7 @@ import time
 from django.utils.timezone import now
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
+from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -26,7 +27,7 @@ class SendAuthCodeView(APIView):
             phone_number = serializer.validated_data['phone_number']
             code = random.randint(1000, 9999)
             AuthCode.objects.update_or_create(
-                phone_number= phone_number,
+                phone_number=phone_number,
                 defaults={"code": code, "created_at": now()}
             )
             # имитация задержки при отправке кода
@@ -53,21 +54,22 @@ class VerifyAuthCodeView(APIView):
             try:
                 auth_code = AuthCode.objects.get(phone_number=phone_number)
             except AuthCode.DoesNotExist:
-                return Response({"error": "Неверный номер телефона"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"error": "Неверный код или номер телефона"}, status=status.HTTP_404_NOT_FOUND)
 
             if auth_code.code != code:
                 return Response({"error": "Код неверный"}, status=status.HTTP_400_BAD_REQUEST)
 
             if auth_code.is_expired():
+                AuthCode.objects.get(phone_number=phone_number).delete()
                 return Response({"error": "Срок действия кода истек"}, status=status.HTTP_400_BAD_REQUEST)
 
+            AuthCode.objects.get(phone_number=phone_number).delete()
             user, created = User.objects.get_or_create(phone_number=phone_number)
+            print(user, type(user))
+            token, _ = Token.objects.get_or_create(user=user)
             return Response({
-                "message": "Авторизация прошла успешна",
-                "user": {
-                    "phone_number": user.phone_number,
-                    "invite_code": user.invite_code,
-                }
+                "phone_number": user.phone_number,
+                "token": token.key
             }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
