@@ -5,11 +5,12 @@ from django.utils.timezone import now
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import User, AuthCode
-from .serializers import PhoneNumberSerializer, VerificationCodeSerializer
+from .serializers import PhoneNumberSerializer, VerificationCodeSerializer, TokenWithPhoneSerializer, ProfileSerializer
 
 
 class SendAuthCodeView(APIView):
@@ -39,10 +40,10 @@ class SendAuthCodeView(APIView):
 class VerifyAuthCodeView(APIView):
     @extend_schema(
         summary="Проверка кода авторизации",
-        description="Проверяет валидность кода и выполняет авторизацию",
+        description="Проверяет валидность кода и выполняет авторизацию, возращает access токен",
         request=VerificationCodeSerializer,
         responses={
-            200: VerificationCodeSerializer
+            200: TokenWithPhoneSerializer
         }
     )
     def post(self, request):
@@ -71,5 +72,24 @@ class VerifyAuthCodeView(APIView):
                 "phone_number": user.phone_number,
                 "token": token.key
             }, status=status.HTTP_200_OK)
-
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    @extend_schema(
+        summary="Получение профиля пользователя",
+        description="Получает профиль пользователя, используя access токен",
+        responses={
+            200: ProfileSerializer
+        }
+    )
+    def get(self, request):
+        user = request.user
+        referrals = User.objects.filter(activated_invite_code=user.invite_code)
+        return Response({
+            "phone_number": user.phone_number,
+            "invite_code": user.invite_code,
+            "activated_invite_code": user.activated_invite_code,
+            "referrals": referrals,
+        })

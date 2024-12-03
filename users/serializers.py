@@ -16,16 +16,16 @@ class VerificationCodeSerializer(PhoneNumberSerializer):
     code = serializers.IntegerField(min_value=1000, max_value=9999)
 
 
-class UserDetailSerializer(serializers.ModelSerializer):
-    referrals_phones = serializers.SerializerMethodField()
+class TokenWithPhoneSerializer(PhoneNumberSerializer):
+    token = serializers.CharField(max_length=40)
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+    referrals = serializers.ListSerializer(child=PhoneNumberSerializer())
 
     class Meta:
         model = User
         fields = ['phone_number', 'invite_code', 'activated_invite_code', 'referrals']
-
-    def get_referrals_phones(self, user: User) -> List[str]:
-        referrals = User.objects.filter(activated_invite_code=user.invite_code)
-        return [user.phone_number for user in referrals]
 
 
 class ActivateInviteSerializer(serializers.Serializer):
