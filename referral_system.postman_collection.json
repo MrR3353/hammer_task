@@ -1,0 +1,767 @@
+{
+	"info": {
+		"_postman_id": "f494a9da-448a-49d1-88a4-203c7756cd26",
+		"name": "referral_system",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35005544"
+	},
+	"item": [
+		{
+			"name": "Send code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check phone_number\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var phone_number = pm.variables.get(\"phone_number\");\r",
+							"    pm.expect(jsonData.phone_number).to.eql(phone_number);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"code\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"code\", jsonData.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone_number",
+							"value": "{{phone_number}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/send-code/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"send-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Verify code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check phone_number\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var phone_number = pm.variables.get(\"phone_number\");\r",
+							"    pm.expect(jsonData.phone_number).to.eql(phone_number);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"token\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"token\", jsonData.token);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone_number",
+							"value": "{{phone_number}}",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "{{code}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/verify-code/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"verify-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check phone_number\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var phone_number = pm.variables.get(\"phone_number\");\r",
+							"    pm.expect(jsonData.phone_number).to.eql(phone_number);\r",
+							"});\r",
+							"pm.test(\"Save invite_code\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"invite_code\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"invite_code\", jsonData.invite_code);\r",
+							"});\r",
+							"pm.test(\"Check activated_invite_code\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.activated_invite_code).to.eql(null);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"referrals_phones\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/profile/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"profile",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activate Invalid Invite",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "invite_code",
+							"value": "GvbMz",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/activate-invite/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"activate-invite",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Activate Own Invite Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(400);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "invite_code",
+							"value": "{{invite_code}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/activate-invite/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"activate-invite",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user2 Send code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check phone_number\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var phone_number = pm.variables.get(\"phone_number2\");\r",
+							"    pm.expect(jsonData.phone_number).to.eql(phone_number);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"code\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"code\", jsonData.code);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone_number",
+							"value": "{{phone_number2}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/send-code/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"send-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user2 Verify invalid code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone_number",
+							"value": "{{phone_number}}",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "{{code}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/verify-code/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"verify-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user2 Verify code",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check phone_number\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var phone_number = pm.variables.get(\"phone_number2\");\r",
+							"    pm.expect(jsonData.phone_number).to.eql(phone_number);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"token\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"token2\", jsonData.token);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "phone_number",
+							"value": "{{phone_number2}}",
+							"type": "text"
+						},
+						{
+							"key": "code",
+							"value": "{{code}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/verify-code/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"verify-code",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user2 Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check phone_number\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var phone_number = pm.variables.get(\"phone_number2\");\r",
+							"    pm.expect(jsonData.phone_number).to.eql(phone_number);\r",
+							"});\r",
+							"pm.test(\"Save invite_code\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"invite_code\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"invite_code2\", jsonData.invite_code);\r",
+							"});\r",
+							"pm.test(\"Check activated_invite_code\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.activated_invite_code).to.eql(null);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"referrals_phones\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token2}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/profile/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"profile",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user2 Activate Invite",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token2}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "invite_code",
+							"value": "{{invite_code}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/activate-invite/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"activate-invite",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user2 Profile Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check phone_number\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var phone_number = pm.variables.get(\"phone_number2\");\r",
+							"    pm.expect(jsonData.phone_number).to.eql(phone_number);\r",
+							"});\r",
+							"pm.test(\"Save invite_code\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"invite_code\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"invite_code2\", jsonData.invite_code);\r",
+							"});\r",
+							"pm.test(\"Check activated_invite_code\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var invite_code = pm.variables.get(\"invite_code\");\r",
+							"    pm.expect(jsonData.activated_invite_code).to.eql(invite_code);\r",
+							"});\r",
+							"pm.test(\"Body matches string\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"referrals_phones\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token2}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/profile/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"profile",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Profile Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"pm.test(\"Check phone_number\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var phone_number = pm.variables.get(\"phone_number\");\r",
+							"    pm.expect(jsonData.phone_number).to.eql(phone_number);\r",
+							"});\r",
+							"pm.test(\"Save invite_code\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"invite_code\");\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.collectionVariables.set(\"invite_code\", jsonData.invite_code);\r",
+							"});\r",
+							"pm.test(\"Check activated_invite_code\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    pm.expect(jsonData.activated_invite_code).to.eql(null);\r",
+							"});\r",
+							"pm.test(\"Check referrals_phones\", function () {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    var phone_number2 = pm.variables.get(\"phone_number2\");\r",
+							"    pm.expect(jsonData.referrals_phones).to.eql([phone_number2]);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Token {{token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": []
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/auth/profile/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"auth",
+						"profile",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "phone_number",
+			"value": "+71234567890",
+			"type": "string"
+		},
+		{
+			"key": "code",
+			"value": ""
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "invite_code",
+			"value": ""
+		},
+		{
+			"key": "phone_number2",
+			"value": "+71234567892",
+			"type": "string"
+		},
+		{
+			"key": "token2",
+			"value": ""
+		},
+		{
+			"key": "invite_code2",
+			"value": ""
+		}
+	]
+}

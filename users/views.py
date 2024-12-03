@@ -1,6 +1,7 @@
 import random
 import time
 
+from django.shortcuts import redirect
 from django.utils.timezone import now
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -10,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import User, AuthCode
-from .serializers import PhoneNumberSerializer, VerificationCodeSerializer, TokenWithPhoneSerializer, ProfileSerializer
+from .serializers import PhoneNumberSerializer, VerificationCodeSerializer, TokenWithPhoneSerializer, ProfileSerializer, ActivateInviteSerializer
 
 
 class SendAuthCodeView(APIView):
@@ -86,10 +87,39 @@ class ProfileView(APIView):
     )
     def get(self, request):
         user = request.user
-        referrals = User.objects.filter(activated_invite_code=user.invite_code)
+        referrals_phones = User.objects.filter(activated_invite_code=user.invite_code).values_list('phone_number', flat=True)
         return Response({
             "phone_number": user.phone_number,
             "invite_code": user.invite_code,
             "activated_invite_code": user.activated_invite_code,
-            "referrals": referrals,
-        })
+            "referrals_phones": referrals_phones,
+        }, status=status.HTTP_200_OK)
+
+
+class ActivateInviteView(APIView):
+    permission_classes = [IsAuthenticated]
+    @extend_schema(
+        summary="Активация инвайт кода",
+        description="Активирует инвайт код другого пользователя, если он существует",
+        request=ActivateInviteSerializer
+    )
+    def post(self, request):
+        serializer = ActivateInviteSerializer(data=request.data)
+        user = request.user
+        if user.activated_invite_code:
+            return Response({"error": "Инвайт код уже был активирован"}, status=status.HTTP_400_BAD_REQUEST)
+
+        if serializer.is_valid():
+            invite_code = serializer.validated_data['invite_code']
+            try:
+                invite_owner = User.objects.get(invite_code=invite_code)
+            except User.DoesNotExist:
+                return Response({"error": "Несуществующий инвайт код"}, status=status.HTTP_404_NOT_FOUND)
+
+            if user == invite_owner:
+                return Response({"error": "Нельзя активировать собственный инвайт код"}, status=status.HTTP_400_BAD_REQUEST)
+
+            user.activated_invite_code = invite_code
+            user.save()
+            return Response({}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -11,6 +11,8 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=15, unique=True)
     invite_code = models.CharField(max_length=6, unique=True)
     activated_invite_code = models.CharField(max_length=6, blank=True, null=True, db_index=True)
+    username = models.CharField(max_length=150, unique=False)
+    USERNAME_FIELD = 'phone_number'
 
     def save(self, *args, **kwargs):
         if not self.invite_code:
