@@ -47,12 +47,11 @@
 					]
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/send-code/",
+					"raw": "{{BASE_URL}}/send-code/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"send-code",
 						""
 					]
@@ -106,12 +105,11 @@
 					]
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/verify-code/",
+					"raw": "{{BASE_URL}}/verify-code/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"verify-code",
 						""
 					]
@@ -169,12 +167,11 @@
 					"formdata": []
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/profile/",
+					"raw": "{{BASE_URL}}/profile/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"profile",
 						""
 					]
@@ -218,12 +215,11 @@
 					]
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/activate-invite/",
+					"raw": "{{BASE_URL}}/activate-invite/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"activate-invite",
 						""
 					]
@@ -267,12 +263,11 @@
 					]
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/activate-invite/",
+					"raw": "{{BASE_URL}}/activate-invite/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"activate-invite",
 						""
 					]
@@ -321,12 +316,11 @@
 					]
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/send-code/",
+					"raw": "{{BASE_URL}}/send-code/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"send-code",
 						""
 					]
@@ -371,12 +365,11 @@
 					]
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/verify-code/",
+					"raw": "{{BASE_URL}}/verify-code/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"verify-code",
 						""
 					]
@@ -440,12 +433,11 @@
 					]
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/verify-code/",
+					"raw": "{{BASE_URL}}/verify-code/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"verify-code",
 						""
 					]
@@ -503,12 +495,11 @@
 					"formdata": []
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/profile/",
+					"raw": "{{BASE_URL}}/profile/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"profile",
 						""
 					]
@@ -552,12 +543,11 @@
 					]
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/activate-invite/",
+					"raw": "{{BASE_URL}}/activate-invite/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"activate-invite",
 						""
 					]
@@ -626,12 +616,11 @@
 					"formdata": []
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/profile/",
+					"raw": "{{BASE_URL}}/profile/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"profile",
 						""
 					]
@@ -691,12 +680,11 @@
 					"formdata": []
 				},
 				"url": {
-					"raw": "{{BASE_URL}}/auth/profile/",
+					"raw": "{{BASE_URL}}/profile/",
 					"host": [
 						"{{BASE_URL}}"
 					],
 					"path": [
-						"auth",
 						"profile",
 						""
 					]
