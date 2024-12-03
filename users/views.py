@@ -1,7 +1,6 @@
 import random
 import time
 
-from django.shortcuts import redirect
 from django.utils.timezone import now
 from drf_spectacular.utils import extend_schema
 from rest_framework import status
@@ -11,7 +10,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import User, AuthCode
-from .serializers import PhoneNumberSerializer, VerificationCodeSerializer, TokenWithPhoneSerializer, ProfileSerializer, ActivateInviteSerializer
+from .serializers import PhoneNumberSerializer, VerificationCodeSerializer, TokenWithPhoneSerializer, ProfileSerializer, \
+    ActivateInviteSerializer
 
 
 class SendAuthCodeView(APIView):
