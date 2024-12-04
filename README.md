@@ -20,3 +20,32 @@
 - Django, DRF
 - PostgreSQL
 - Остальное на ваше усмотрение :)
+
+# Запуск:
+Запущенное приложение можно посмотреть:
+- c интерфейсом на Django Templates: https://imrex.pythonanywhere.com/send-code
+- документацию: https://imrex.pythonanywhere.com/api/docs/swagger/
+- postman тесты (локальные) в файле ```referral_system.postman_collection.json```
+
+## Как запустить локально:
+- клонировать этот репозиторий, Python 3.10+
+```shell
+git clone https://github.com/MrR3353/hammer_task.git
+```
+- перейти в папку проекта
+```shell
+cd hammer_task
+```
+- устанавить зависимости
+```shell
+pip install -r requirements.txt
+```
+- создать БД в postgresql и указать параметры в ```.env``` файле
+- применить миграции
+```shell
+python manage.py migrate
+```
+- запустить сервер
+```shell
+python manage.py runserver
+```
